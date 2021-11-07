@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-# Copyright (c) 2019 Anton Semjonov
+# Original work Copyright (c) 2019 Anton Semjonov
+# Modified work Copyright (c) 2021 quadratmuede
 # Licensed under the MIT License
 
 import subprocess, csv, json, tempfile, sys, argparse, os, io, signal, re, datetime, logging, requests
@@ -147,7 +148,7 @@ def take_measurement():
   table.insert(r)
   print(r)
   if args.telegram_bot:
-    telegramtext = "New speedtest:\nPing: " + r['Ping'] + "ms \nDownload: " + str(int(float(r['Download']) / 1000000)) + " MB/s \nUpload: " + str(int(float(r['Upload']) / 1000000)) + " MB/s"
+    telegramtext = "🚀New Speedtest:\nPing: " + r['Ping'] + " ms \nDownload: " + str(int(float(r['Download']) / 1000000)) + " MB/s \nUpload: " + str(int(float(r['Upload']) / 1000000)) + " MB/s"
     send_msg(telegramtext)
 
 
@@ -230,6 +231,8 @@ def flask_server():
   print(" * Connected database: {}".format(args.database))
   app = flask.Flask("speedtest", root_path="./")
   app.env = "development"
+  if args.telegram_bot:
+    print("Telegram-Bot API token detected. Telegram notification turned on.")
 
   # retrieve common request parameters for retrieval and plotting
   def request_params(req):

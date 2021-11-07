@@ -1,4 +1,5 @@
-# Copyright (c) 2019 Anton Semjonov
+# Original work Copyright (c) 2019 Anton Semjonov
+# Modified work Copyright (c) 2021 quadratmuede
 # Licensed under the MIT License
 
 # Check with hadolint:
@@ -29,6 +30,7 @@ RUN apk add --no-cache gnuplot ttf-droid libcurl libxml2 libstdc++ libgcc tini
 
 # copy requirements file and install with pip
 COPY requirements.txt /requirements.txt
+
 # hadolint ignore=DL3018
 RUN apk add --no-cache --virtual build-deps musl-dev gcc g++ postgresql-dev \
   && apk add --no-cache postgresql-libs \
@@ -43,6 +45,18 @@ ENV PORT="8000"
 
 # database uri (sqlalchemy uri)
 ENV DATABASE="sqlite:////data/speedtests.db"
+
+# timezone 
+ENV TZ="Europe/Berlin"
+
+# parameters for dashline
+ENV MARKER_DOWNLOAD="1000"
+ENV MARKER_UPLOAD="50"
+ENV UPLOAD_SCALE="15"
+
+# place for telegram bot API token and chat id
+ENV TELEGRAM_BOT_API=""
+ENV TELEGRAM_CHAT_ID=""
 
 # copy built binary from first stage
 COPY --from=compiler /build/SpeedTest /usr/local/bin/SpeedTest
